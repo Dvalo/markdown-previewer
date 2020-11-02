@@ -1,25 +1,42 @@
-import logo from './logo.svg';
+import React from 'react';
+import marked from 'marked';
+import preview from './extra/preview';
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class Markdown extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      markdown: preview,
+    };
+  }
+  handleChange = (event) => {
+    this.setState({ markdown: event.target.value });
+  };
+  render() {
+    let rawMarkup = marked(this.state.markdown, { breaks: true });
+    return (
+      <div id="markdown-previewer">
+        <div id="editor-wrapper">
+          <div className="head">
+            <span>Editor</span>
+          </div>
+          <textarea
+            id="editor"
+            spellcheck="false"
+            value={this.state.markdown}
+            onChange={this.handleChange}/>
+        </div>
+        <div id="preview-wrapper">
+          <div className="head">
+            <span>Previewer</span>
+          </div>
+          <div id="preview" dangerouslySetInnerHTML={{ __html: rawMarkup }} />
+        </div>
+      </div>
+    );
+  }
 }
 
-export default App;
+export default Markdown;
